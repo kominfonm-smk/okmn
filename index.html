@@ -169,6 +169,40 @@
             margin-bottom: 10px;
         }
         
+        .school-info {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .school-info h4 {
+            color: #1565c0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .principal-info {
+            background-color: #fff8e1;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .principal-info h4 {
+            color: #e65100;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
         .input-container {
             padding: 20px 25px;
             background-color: white;
@@ -256,15 +290,6 @@
             30% {
                 transform: translateY(-8px);
             }
-        }
-        
-        .info-box {
-            background-color: #e8f4fd;
-            border-left: 4px solid #2196f3;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 14px;
         }
         
         .warning-box {
@@ -364,7 +389,7 @@
                 <span id="api-status-text">Menggunakan AI</span>
             </div>
             <h1><i class="fas fa-robot"></i> Chatbot AI SMK Infokom</h1>
-            <p>Chatbot informasi tentang SMK Infokom Bogor. Tanyakan tentang jurusan, kegiatan, pendaftaran, dan lainnya.</p>
+            <p>Chatbot informasi tentang SMK Infokom Bogor. Tanyakan tentang jurusan, kegiatan, fasilitas, dan lainnya.</p>
         </div>
         
         <div class="chat-container" id="chat-container">
@@ -377,19 +402,31 @@
                     <p>Halo! Saya adalah chatbot AI SMK Infokom Bogor. Saya siap membantu Anda dengan informasi tentang sekolah kami.</p>
                     <p>Anda bisa menanyakan tentang:</p>
                     <ul>
+                        <li>Nama sekolah</li>
                         <li>Program jurusan yang tersedia</li>
-                        <li>Proses pendaftaran siswa baru</li>
                         <li>Kegiatan ekstrakurikuler</li>
                         <li>Fasilitas sekolah</li>
-                        <li>Prestasi sekolah</li>
+                        <li>Kepala sekolah</li>
                         <li>Dan informasi lainnya tentang SMK Infokom</li>
                     </ul>
+                    
+                    <div class="school-info">
+                        <h4><i class="fas fa-school"></i> Nama Sekolah:</h4>
+                        <p><strong>SMK Infokom Bogor</strong></p>
+                    </div>
+                    
+                    <div class="principal-info">
+                        <h4><i class="fas fa-user-tie"></i> Kepala Sekolah:</h4>
+                        <p><strong>Liliek Rahmaningsih</strong></p>
+                    </div>
+                    
                     <p>Apa yang ingin Anda ketahui?</p>
                     
                     <div class="suggestions">
+                        <button class="suggestion-btn" data-question="Apa nama sekolah ini?">Nama Sekolah</button>
                         <button class="suggestion-btn" data-question="Apa saja jurusan di SMK Infokom?">Jurusan di SMK Infokom</button>
-                        <button class="suggestion-btn" data-question="Bagaimana cara mendaftar?">Cara Pendaftaran</button>
-                        <button class="suggestion-btn" data-question="Apa keunggulan SMK Infokom?">Keunggulan Sekolah</button>
+                        <button class="suggestion-btn" data-question="Siapa kepala sekolah SMK Infokom?">Kepala Sekolah</button>
+                        <button class="suggestion-btn" data-question="Apa saja fasilitas di SMK Infokom?">Fasilitas Sekolah</button>
                     </div>
                 </div>
             </div>
@@ -408,15 +445,15 @@
     </div>
 
     <script>
-        // Konfigurasi API
-        const API_KEY = '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';
+        // ==================== KONFIGURASI API ====================
+        const API_KEY = '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';
         const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
         
-        // Status API
+        // ==================== STATUS API ====================
         let apiOnline = true;
         let useLocalMode = false;
         
-        // Elemen DOM
+        // ==================== ELEMEN DOM ====================
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
@@ -424,40 +461,29 @@
         const apiStatusText = document.getElementById('api-status-text');
         const modeIndicator = document.getElementById('mode-indicator');
         
-        // Database pengetahuan lokal tentang SMK Infokom
+        // ==================== DATABASE LOKAL ====================
         const localKnowledgeBase = {
-            "jurusan": {
-                "keywords": ["jurusan", "program studi", "konsentrasi", "rpl", "tkj", "multimedia"],
+            "nama-sekolah": {
+                "keywords": ["nama sekolah", "sekolah apa", "nama",],
                 "response": `
-                    <p><strong>SMK Infokom Bogor memiliki 3 jurusan unggulan:</strong></p>
+                    <div class="school-info">
+                        <h4><i class="fas fa-school"></i> Nama Sekolah:</h4>
+                        <p><strong>SMK Infokom Bogor</strong></p>
+                        <p>Sekolah Menengah Kejuruan (SMK) yang berfokus pada teknologi informasi dan komunikasi.</p>
+                    </div>
+                `
+            },
+            "jurusan": {
+                "keywords": ["jurusan", "program studi", "konsentrasi", "rpl", "tkj", "multimedia", "pspt", "dkv"],
+                "response": `
+                    <p><strong>SMK Infokom Bogor memiliki 4 jurusan unggulan:</strong></p>
                     <ol>
                         <li><strong>Rekayasa Perangkat Lunak (RPL)</strong> - Fokus pada pemrograman, pengembangan aplikasi web dan mobile, database, dan software engineering.</li>
                         <li><strong>Teknik Komputer dan Jaringan (TKJ)</strong> - Fokus pada jaringan komputer, administrasi server, keamanan jaringan, dan maintenance hardware.</li>
                         <li><strong>Desain Komunikasi Visual (DKV)</strong> - Fokus pada desain grafis, animasi, produksi video, fotografi digital, dan konten kreatif.</li>
-                        <li><strong>Produksi dan Siaran Program Televisi(PSPT)</strong> - Fokus pada desain grafis, animasi, produksi video, fotografi digital, dan konten kreatif.</li>
+                        <li><strong>Produksi dan Siaran Program Televisi (PSPT)</strong> - Fokus pada produksi konten televisi, penyiaran, broadcasting, dan multimedia.</li>
                     </ol>
                     <p>Setiap jurusan dilengkapi dengan laboratorium khusus dan diajar oleh pengajar yang kompeten di bidangnya.</p>
-                `
-            },
-            "pendaftaran": {
-                "keywords": ["daftar", "pendaftaran", "cara masuk", "syarat", "registrasi", "penerimaan"],
-                "response": `
-                    <p><strong>Proses Pendaftaran SMK Infokom Bogor:</strong></p>
-                    <ol>
-                        <li><strong>Pendaftaran Online</strong> - melalui website resmi: www.smkinfokom-bogor.sch.id</li>
-                        <li><strong>Persyaratan:</strong>
-                            <ul>
-                                <li>Fotokopi ijazah SMP/sederajat</li>
-                                <li>Fotokopi raport kelas 7-9</li>
-                                <li>Akta kelahiran dan KK</li>
-                                <li>Pas foto 3x4 (3 lembar)</li>
-                            </ul>
-                        </li>
-                        <li><strong>Tes Seleksi:</strong> Tes akademik (Matematika, Bahasa Inggris, IPA) dan tes bakat minat</li>
-                        <li><strong>Pengumuman:</strong> Hasil seleksi diumumkan melalui website sekolah</li>
-                        <li><strong>Daftar Ulang:</strong> Bagi yang diterima melakukan daftar ulang dengan melengkapi administrasi</li>
-                    </ol>
-                    <p><strong>Periode pendaftaran:</strong> Januari - Mei setiap tahunnya.</p>
                 `
             },
             "fasilitas": {
@@ -465,16 +491,7 @@
                 "response": `
                     <p><strong>Fasilitas SMK Infokom Bogor:</strong></p>
                     <ul>
-                        <li><strong>Laboratorium Komputer</strong> - 6 ruang dengan spesifikasi tinggi</li>
-                        <li><strong>Laboratorium Jaringan</strong> - dilengkapi peralatan Cisco</li>
-                        <li><strong>Studio Multimedia</strong> - lengkap dengan kamera, lighting, green screen</li>
-                        <li><strong>Perpustakaan Digital</strong> - dengan akses online dan koleksi buku IT</li>
-                        <li><strong>Lapangan Olahraga</strong> - futsal, basket, voli</li>
-                        <li><strong>Ruang Praktek</strong> - untuk setiap jurusan</li>
-                        <li><strong>Hotspot Area</strong> - WiFi di seluruh lingkungan sekolah</li>
-                        <li><strong>Masjid dan Ruang Ibadah</strong></li>
-                        <li><strong>Kantin Sehat</strong> dengan WiFi</li>
-                        <li><strong>Auditorium</strong> kapasitas 300 orang</li>
+                        <li><strong>SMK Infokom Bogor memiliki berbagai fasilitas akademik seperti ruang kelas, laboratorium (RPL, TKJ, DKV, PSPT), ruang praktik, studio cast, dan perpustakaan</strong></li>
                     </ul>
                 `
             },
@@ -489,6 +506,7 @@
                         <li><strong>Keagamaan:</strong> Rohani Islam (Rohis), Rohani Kristen (Rohkris)</li>
                         <li><strong>Kepemimpinan:</strong> Paskibra, Palang Merah Remaja (PMR)</li>
                         <li><strong>IT & Teknologi:</strong> Programming Club, Network Club, Design Club</li>
+                        <li><strong>Broadcasting:</strong> Radio Sekolah, Production Club</li>
                         <li><strong>Bahasa:</strong> English Club, Japanese Club</li>
                     </ul>
                 `
@@ -498,25 +516,20 @@
                 "response": `
                     <p><strong>Alamat dan Kontak SMK Infokom Bogor:</strong></p>
                     <ul>
-                        <li><strong>Alamat:</strong>Jl. Letjen Ibrahim Adjie No.178, RT.03/RW.08, Sindangbarang, Kec. Bogor Barat.,Kota Bogor, Jawa Barat 16117</li>
-                        
+                        <li><strong>Alamat:</strong> Jl. Letjen Ibrahim Adjie No.178, RT.03/RW.08, Sindangbarang, Kec. Bogor Barat, Kota Bogor, Jawa Barat 16117</li>
+                        <li><strong>Telepon:</strong> (0251) 8325678</li>
+                        <li><strong>Email:</strong> info@smkinfokom-bogor.sch.id</li>
+                        <li><strong>Website:</strong> www.smkinfokom-bogor.sch.id</li>
                     </ul>
                 `
             },
-            "keunggulan": {
-                "keywords": ["keunggulan", "kelebihan", "keistimewaan", "unggul", "prestasi", "akreditasi"],
+            "kepala-sekolah": {
+                "keywords": ["kepala sekolah", "kepsek", "kepala", "liliek", "rahmaningsih", "kepemimpinan"],
                 "response": `
-                    <p><strong>Keunggulan SMK Infokom Bogor:</strong></p>
-                    <ol>
-                        <li><strong>Akreditasi A (Unggul)</strong> dari BAN-SM</li>
-                        <li><strong>Sertifikasi ISO 9001:2015</strong> untuk manajemen mutu</li>
-                        <li><strong>Kerja Sama Industri</strong> dengan perusahaan IT ternama</li>
-                        <li><strong>Fasilitas Lengkap</strong> dengan teknologi terkini</li>
-                        <li><strong>Pengajar Berkualitas</strong> dengan sertifikasi kompetensi</li>
-                        <li><strong>Tingkat Penyerapan Lulusan Tinggi</strong> (85% langsung kerja)</li>
-                        <li><strong>Prestasi Kompetisi</strong> tingkat regional dan nasional</li>
-                        <li><strong>Program Magang</strong> di perusahaan mitra</li>
-                    </ol>
+                    <div class="principal-info">
+                        <h4><i class="fas fa-user-tie"></i> Kepala Sekolah SMK Infokom Bogor:</h4>
+                        <p><strong>Liliek Rahmaningsih</strong></p>
+                    </div>
                 `
             },
             "default": {
@@ -526,17 +539,19 @@
                         <p><strong>Mode Offline Aktif</strong> - Saat ini saya menggunakan database lokal karena koneksi AI sedang terganggu.</p>
                         <p>Anda dapat menanyakan tentang:</p>
                         <ul>
+                            <li>Nama sekolah</li>
                             <li>Jurusan yang tersedia</li>
-                            <li>Proses pendaftaran</li>
                             <li>Fasilitas sekolah</li>
                             <li>Kegiatan ekstrakurikuler</li>
                             <li>Alamat dan kontak</li>
-                            <li>Keunggulan sekolah</li>
+                            <li>Kepala sekolah</li>
                         </ul>
                     </div>
                 `
             }
         };
+        
+        // ==================== FUNGSI UTAMA ====================
         
         // Fungsi untuk mencari jawaban dari database lokal
         function findLocalAnswer(question) {
@@ -676,7 +691,13 @@
                         messages: [
                             {
                                 role: 'system',
-                                content: `Anda adalah chatbot informasi untuk SMK Infokom Bogor. Berikan jawaban yang informatif dan ramah tentang sekolah ini. Jawab dalam Bahasa Indonesia. Jika tidak tahu jawabannya, katakan dengan jujur.`
+                                content: `Anda adalah chatbot informasi untuk SMK Infokom Bogor. Berikan jawaban yang informatif dan ramah tentang sekolah ini. 
+                                Informasi penting: 
+                                - Nama sekolah: SMK Infokom Bogor
+                                - Kepala sekolah: Liliek Rahmaningsih
+                                - Alamat: Jl. Letjen Ibrahim Adjie No.178, Bogor
+                                - Jurusan: RPL, TKJ, DKV, PSPT
+                                Jawab dalam Bahasa Indonesia. Jika tidak tahu jawabannya, katakan dengan jujur.`
                             },
                             {
                                 role: 'user',
@@ -758,10 +779,10 @@
             const suggestionsDiv = document.createElement('div');
             suggestionsDiv.className = 'suggestions';
             suggestionsDiv.innerHTML = `
+                <button class="suggestion-btn" data-question="Apa nama sekolah ini?">Nama Sekolah</button>
                 <button class="suggestion-btn" data-question="Apa saja jurusan di SMK Infokom?">Jurusan</button>
-                <button class="suggestion-btn" data-question="Bagaimana cara mendaftar?">Pendaftaran</button>
-                <button class="suggestion-btn" data-question="Apa fasilitas di SMK Infokom?">Fasilitas</button>
-                <button class="suggestion-btn" data-question="Dimana alamat SMK Infokom?">Alamat</button>
+                <button class="suggestion-btn" data-question="Siapa kepala sekolah SMK Infokom?">Kepala Sekolah</button>
+                <button class="suggestion-btn" data-question="Apa saja fasilitas di SMK Infokom?">Fasilitas</button>
             `;
             responseElement.appendChild(suggestionsDiv);
             
@@ -800,7 +821,7 @@
             
             if (!apiConnected) {
                 addMessage(`
-                    <div class="info-box">
+                    <div class="warning-box">
                         <p><strong>Informasi:</strong> Koneksi AI sedang offline. Chatbot menggunakan database lokal.</p>
                         <p>Anda tetap bisa menanyakan informasi dasar tentang SMK Infokom Bogor.</p>
                     </div>
