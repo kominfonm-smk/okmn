@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot AI SMK Infokom Bogor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #3949ab;
+            --accent-color: #ff5722;
+            --light-color: #f5f7ff;
+            --dark-color: #0d1538;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --user-bubble: #3949ab;
+            --bot-bubble: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0d1538 0%, #1a237e 50%, #3949ab 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Header dengan efek glassmorphism */
+        .header {
+            background: linear-gradient(135deg, rgba(26, 35, 126, 0.95) 0%, rgba(57, 73, 171, 0.95) 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff5722, #ff9800, #ff5722);
+            background-size: 200% 100%;
+            animation: gradientMove 3s ease infinite;
+        }
+        
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+        
+        .header p {
+            font-size: 15px;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .school-badge {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff5722, #ff9800);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+        }
+        
+        /* Area Chat */
+        .chat-container {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: #f5f7ff;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(57, 73, 171, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 87, 34, 0.05) 0%, transparent 20%);
+        }
+        
+        /* Custom Scrollbar */
+        .chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+        
+        /* Pesan */
+        .message {
+            display: flex;
+            max-width: 85%;
+            margin-bottom: 5px;
+            animation: fadeInUp 0.4s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(15px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+        }
+        
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 2px solid white;
+        }
+        
+        .user-avatar {
+            background: linear-gradient(135deg, var(--user-bubble), #283593);
+            margin-left: 15px;
+        }
+        
+        .bot-avatar {
+            background: linear-gradient(135deg, var(--accent-color), #ff9800);
+            margin-right: 15px;
+        }
+        
+        .message-content {
+            padding: 18px;
+            border-radius: 22px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        
+        .message-content:hover {
+            transform: translateY(-2px);
+        }
+        
+        .user-message .message-content {
+            background: linear-gradient(135deg, var(--user-bubble), #283593);
+            color: white;
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+            border-bottom-left-radius: 22px;
+        }
+        
+        .bot-message .message-content {
+            background-color: var(--bot-bubble);
+            color: #333;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 22px;
+            border-bottom-right-radius: 22px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .message-content p {
+            margin-bottom: 8px;
+        }
+        
+        .message-content ul, .message-content ol {
+            padding-left: 22px;
+            margin-bottom: 12px;
+        }
+        
+        .message-content li {
+            margin-bottom: 5px;
+        }
+        
+        /* Area Input */
+        .input-container {
+            padding: 20px 25px;
+            background-color: white;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            position: relative;
+        }
+        
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+        
+        #user-input {
+            width: 100%;
+            padding: 18px 20px 18px 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 16px;
+            transition: all 0.3s;
+            outline: none;
+            background-color: #f9f9ff;
+        }
+        
+        #user-input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(57, 73, 171, 0.1);
+            background-color: white;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            font-size: 18px;
+        }
+        
+        #send-button {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            font-size: 22px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(57, 73, 171, 0.3);
+        }
+        
+        #send-button:hover {
+            transform: scale(1.08) rotate(5deg);
+            box-shadow: 0 8px 25px rgba(57, 73, 171, 0.4);
+        }
+        
+        #send-button:active {
+            transform: scale(0.98);
+        }
+        
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: white;
+            border-radius: 22px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            width: fit-content;
+            margin-top: 5px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .typing-indicator span {
+            height: 12px;
+            width: 12px;
+            background: linear-gradient(135deg, var(--accent-color), #ff9800);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            animation: typingBounce 1.5s infinite ease-in-out;
+        }
+        
+        .typing-indicator span:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+            margin-right: 0;
+        }
+        
+        @keyframes typingBounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #e8f4fd, #f0f9ff);
+            border-left: 4px solid #2196f3;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-size: 14.5px;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1);
+        }
+        
+        /* Suggestions */
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .suggestion-btn {
+            background: linear-gradient(135deg, #f0f0f0, #e8e8e8);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #333;
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .suggestion-btn:hover {
+            background: linear-gradient(135deg, #e0e0e0, #d8d8d8);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 18px;
+            font-size: 13px;
+            color: #666;
+            background-color: #f9f9ff;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .footer a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Welcome Message Styles */
+        .welcome-title {
+            color: var(--primary-color);
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .welcome-title i {
+            color: var(--accent-color);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                height: 95vh;
+                border-radius: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .school-badge {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+            
+            .chat-container {
+                padding: 20px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .input-container {
+                padding: 15px 20px;
+            }
+            
+            #user-input {
+                padding: 16px 20px 16px 45px;
+            }
+            
+            #send-button {
+                width: 55px;
+                height: 55px;
+                font-size: 20px;
+            }
+            
+            .avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                height: 97vh;
+                border-radius: 18px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+                gap: 12px;
+            }
+            
+            .header p {
+                font-size: 14px;
+            }
+            
+            .school-badge {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            .message-content {
+                padding: 15px;
+                font-size: 15px;
+            }
+            
+            .suggestions {
+                gap: 10px;
+            }
+            
+            .suggestion-btn {
+                padding: 8px 15px;
+                font-size: 13px;
+            }
+        }
+        
+        /* Animasi untuk pesan baru */
+        @keyframes pulse {
+            0% { box-shadow: 0 6px 20px rgba(57, 73, 171, 0.2); }
+            50% { box-shadow: 0 6px 25px rgba(57, 73, 171, 0.4); }
+            100% { box-shadow: 0 6px 20px rgba(57, 73, 171, 0.2); }
+        }
+        
+        .user-message .message-content {
+            animation: pulse 2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <div class="school-badge">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                Chatbot AI SMK Infokom Bogor
+            </h1>
+            <p>Asisten virtual informasi tentang SMK Infokom Bogor. Tanyakan tentang jurusan, kegiatan, pendaftaran, fasilitas, dan informasi lainnya.</p>
+        </div>
+        
+        <div class="chat-container" id="chat-container">
+            <!-- Pesan pembuka dari bot -->
+            <div class="message bot-message">
+                <div class="avatar bot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <div class="welcome-title">
+                        <i class="fas fa-graduation-cap"></i> Selamat Datang di SMK Infokom Bogor!
+                    </div>
+                    <p>Halo! Saya adalah asisten virtual SMK Infokom Bogor. Saya siap membantu Anda dengan informasi tentang sekolah kami.</p>
+                    <p><strong>Anda bisa menanyakan tentang:</strong></p>
+                    <ul>
+                        <li><i class="fas fa-code" style="color: var(--accent-color);"></i> Program jurusan yang tersedia</li>
+                        <li><i class="fas fa-clipboard-list" style="color: var(--accent-color);"></i> Proses pendaftaran siswa baru</li>
+                        <li><i class="fas fa-futbol" style="color: var(--accent-color);"></i> Kegiatan ekstrakurikuler</li>
+                        <li><i class="fas fa-building" style="color: var(--accent-color);"></i> Fasilitas sekolah</li>
+                        <li><i class="fas fa-trophy" style="color: var(--accent-color);"></i> Prestasi sekolah</li>
+                        <li><i class="fas fa-map-marker-alt" style="color: var(--accent-color);"></i> Lokasi dan kontak</li>
+                    </ul>
+                    <p>Apa yang ingin Anda ketahui tentang SMK Infokom Bogor?</p>
+                    
+                    <div class="suggestions">
+                        <button class="suggestion-btn" data-question="Apa saja jurusan di SMK Infokom?">
+                            <i class="fas fa-code"></i> Jurusan di SMK Infokom
+                        </button>
+                        <button class="suggestion-btn" data-question="Bagaimana cara mendaftar ke SMK Infokom?">
+                            <i class="fas fa-user-plus"></i> Cara Pendaftaran
+                        </button>
+                        <button class="suggestion-btn" data-question="Apa keunggulan SMK Infokom?">
+                            <i class="fas fa-star"></i> Keunggulan Sekolah
+                        </button>
+                        <button class="suggestion-btn" data-question="Apa saja fasilitas di SMK Infokom?">
+                            <i class="fas fa-wifi"></i> Fasilitas Sekolah
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <div class="input-wrapper">
+                <div class="input-icon">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <input type="text" id="user-input" placeholder="Ketik pertanyaan Anda tentang SMK Infokom Bogor..." autocomplete="off">
+            </div>
+            <button id="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p><i class="fas fa-info-circle"></i> Chatbot AI SMK Infokom Bogor | Menggunakan Groq API | <i class="fas fa-exclamation-triangle"></i> Data informasi dapat berubah | <i class="fas fa-phone-alt"></i> Kontak: (0251) 123456</p>
+        </div>
+    </div>
+
+    <script>
+        // Konfigurasi API
+        const API_KEY = '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';
+        const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+        
+        // Elemen DOM
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        
+        // Data tentang SMK Infokom untuk konteks chatbot - DIPERBAIKI (typo "skoals" diperbaiki)
+        const smkInfokomContext = `
+        SMK Infokom Bogor adalah sekolah menengah kejuruan yang berfokus pada teknologi informasi dan komunikasi.
+        Sekolah ini beralamat di Jalan Raya Tajur No. 33, Bogor, Jawa Barat.
+        
+        Informasi umum:
+        - Nama lengkap: SMK Informatika dan Komunikasi (Infokom) Bogor
+        - Status: Sekolah Menengah Kejuruan (SMK) Negeri
+        - Akreditasi: A (Unggul)
+        - ISO: 9001:2015 untuk manajemen mutu
+        - Visi: Menjadi sekolah unggul dalam bidang teknologi informasi dan komunikasi yang menghasilkan lulusan kompeten, berkarakter, dan siap kerja.
+        
+        Jurusan yang tersedia di SMK Infokom:
+        1. Rekayasa Perangkat Lunak (RPL) - fokus pada pemrograman, pengembangan software, aplikasi mobile, dan web development
+        2. Teknik Komputer dan Jaringan (TKJ) - fokus pada jaringan komputer, administrasi sistem, keamanan jaringan, dan maintenance hardware
+        3. Multimedia (MM) - fokus pada desain grafis, animasi, produksi video, fotografi digital, dan konten kreatif
+        
+        Kegiatan ekstrakurikuler yang tersedia:
+        - Pramuka (wajib untuk kelas X)
+        - Palang Merah Remaja (PMR)
+        - Rohani Islam (Rohis) dan Kristen (Rohkris)
+        - Futsal dan Sepak Bola
+        - Basket dan Voli
+        - Paskibra
+        - Klub IT (programming club, network club, design club)
+        - English Club
+        - Band Sekolah
+        - Teater
+        
+        Fasilitas sekolah:
+        - 6 Laboratorium komputer dengan spesifikasi tinggi
+        - Laboratorium jaringan dengan peralatan Cisco
+        - Studio multimedia lengkap (kamera, lighting, green screen)
+        - Perpustakaan digital dengan akses online
+        - Lapangan olahraga (futsal, basket, voli)
+        - Ruang praktek untuk setiap jurusan
+        - Hotspot area di seluruh lingkungan sekolah
+        - Masjid dan ruang ibadah
+        - Kantin sehat dengan wifi
+        - Ruang auditorium untuk 300 orang
+        - Area parkir yang luas
+        
+        Prestasi sekolah (5 tahun terakhir):
+        - Juara 1 Lomba Kompetensi Siswa (LKS) bidang IT Networking tingkat Jawa Barat (2023)
+        - Juara 2 Web Design Competition tingkat Nasional (2022)
+        - Juara 3 Lomba Robotik tingkat Jawa Barat (2023)
+        - Juara 1 Desain Grafis Kompetisi Infokom Cup (2022)
+        - Sekolah dengan tingkat penyerapan lulusan tertinggi di Kota Bogor (85% langsung kerja, 10% kuliah, 5% wirausaha)
+        
+        Proses pendaftaran siswa baru:
+        - Pendaftaran online melalui website resmi: www.smkinfokom-bogor.sch.id
+        - Mengisi formulir pendaftaran online
+        - Melengkapi berkas: fotokopi ijazah, raport, akta kelahiran, KK, foto 3x4
+        - Tes seleksi masuk: tes akademik (matematika, bahasa inggris, IPA) dan tes bakat minat
+        - Pengumuman hasil seleksi melalui website dan pengumuman di sekolah
+        - Daftar ulang bagi yang diterima
+        - Masa pengenalan lingkungan sekolah (MPLS)
+        
+        Kerja sama industri:
+        - PT Telkom Indonesia
+        - PT Astra International
+        - Microsoft Indonesia
+        - Cisco Networking Academy
+        - Google Developer Student Clubs
+        - Banyak perusahaan IT di Bogor dan Jakarta
+        
+        Kontak dan informasi:
+        - Alamat: Jalan Raya Tajur No. 33, Bogor, Jawa Barat 16134
+        - Telepon: (0251) 123456
+        - Email: info@smkinfokom-bogor.sch.id
+        - Website: www.smkinfokom-bogor.sch.id
+        - Instagram: @smkinfokombogor
+        - Facebook: SMK Infokom Bogor Official
+        `;
+        
+        // Menambahkan pesan ke chat dengan format yang lebih baik
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = `avatar ${isUser ? 'user-avatar' : 'bot-avatar'}`;
+            avatarDiv.innerHTML = isUser ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            // Format konten dengan HTML yang lebih kaya
+            if (typeof content === 'string') {
+                // Menambahkan pemformatan untuk list, bold, dll.
+                let formattedContent = content
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/^\- (.*$)/gm, '<li>$1</li>')
+                    .replace(/^\d+\. (.*$)/gm, '<li>$1</li>');
+                
+                // Jika ada list items, bungkus dengan <ul>
+                if (formattedContent.includes('<li>')) {
+                    formattedContent = formattedContent.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+                }
+                
+                // Tambahkan pemisah untuk paragraf
+                formattedContent = formattedContent.split('\n\n').map(p => {
+                    if (p.trim().startsWith('<')) return p;
+                    return `<p>${p.trim()}</p>`;
+                }).join('');
+                
+                contentDiv.innerHTML = formattedContent;
+            } else {
+                contentDiv.textContent = content;
+            }
+            
+            messageDiv.appendChild(avatarDiv);
+            messageDiv.appendChild(contentDiv);
+            chatContainer.appendChild(messageDiv);
+            
+            // Scroll ke bawah dengan efek smooth
+            setTimeout(() => {
+                chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 100);
+            
+            return contentDiv;
+        }
+        
+        // Menampilkan indikator typing
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typing-indicator';
+            
+            typingDiv.innerHTML = `
+                <span></span>
+                <span></span>
+                <span></span>
+                <span style="margin-left: 10px; font-size: 13px; color: #666;">SMK Infokom sedang mengetik...</span>
+            `;
+            
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            return typingDiv;
+        }
+        
+        // Menghapus indikator typing
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // Mengirim pesan ke API Groq dengan error handling yang lebih baik
+        async function sendMessageToAPI(message) {
+            try {
+                // Tampilkan indikator loading
+                const typingIndicator = showTypingIndicator();
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'mixtral-8x7b-32768',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: `Anda adalah asisten virtual resmi SMK Infokom Bogor. Berikan jawaban yang informatif, akurat, dan ramah tentang sekolah ini. 
+                                Gunakan informasi berikut sebagai konteks utama: ${smkInfokomContext}. 
+                                Jika ada pertanyaan di luar konteks SMK Infokom, sopan katakan bahwa Anda hanya bisa membantu dengan informasi tentang SMK Infokom Bogor. 
+                                Selalu jawab dalam Bahasa Indonesia yang baik dan mudah dipahami.
+                                Format jawaban dengan baik: gunakan poin-poin untuk informasi penting, bold untuk penekanan.
+                                Jika pertanyaan tentang pendaftaran, sertakan langkah-langkah lengkap.
+                                Jika pertanyaan tentang jurusan, jelaskan masing-masing dengan detail.`
+                            },
+                            {
+                                role: 'user',
+                                content: message
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1500,
+                        stream: false
+                    })
+                });
+                
+                // Hapus indikator typing
+                removeTypingIndicator();
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('API Error:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.choices[0].message.content;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                removeTypingIndicator();
+                
+                // Berikan pesan error yang lebih user-friendly
+                return `Maaf, terjadi kesalahan saat menghubungi server. Silakan coba lagi nanti. 
+                <div class="info-box">
+                    <strong>Tips:</strong> Anda bisa mencoba pertanyaan lain seperti:
+                    <ul>
+                        <li>Apa saja jurusan di SMK Infokom?</li>
+                        <li>Bagaimana cara mendaftar?</li>
+                        <li>Apa fasilitas yang tersedia?</li>
+                    </ul>
+                </div>`;
+            }
+        }
+        
+        // Memproses pesan pengguna
+        async function processUserMessage() {
+            const message = userInput.value.trim();
+            
+            if (!message) {
+                // Tambahkan efek shake jika input kosong
+                userInput.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    userInput.style.animation = '';
+                }, 500);
+                return;
+            }
+            
+            // Tambahkan pesan pengguna ke chat
+            addMessage(message, true);
+            
+            // Kosongkan dan fokuskan kembali input
+            userInput.value = '';
+            userInput.focus();
+            
+            // Kirim ke API dan dapatkan respons
+            const botResponse = await sendMessageToAPI(message);
+            
+            // Tambahkan respons bot ke chat
+            const responseElement = addMessage(botResponse, false);
+            
+            // Tambahkan tombol saran jika respons panjang
+            if (botResponse.length > 150) {
+                const suggestionsDiv = document.createElement('div');
+                suggestionsDiv.className = 'suggestions';
+                suggestionsDiv.innerHTML = `
+                    <button class="suggestion-btn" data-question="Apa saja jurusan di SMK Infokom?">
+                        <i class="fas fa-code"></i> Jurusan
+                    </button>
+                    <button class="suggestion-btn" data-question="Apa kegiatan ekstrakurikuler di SMK Infokom?">
+                        <i class="fas fa-futbol"></i> Ekstrakurikuler
+                    </button>
+                    <button class="suggestion-btn" data-question="Bagaimana prosedur pendaftaran di SMK Infokom?">
+                        <i class="fas fa-clipboard-list"></i> Pendaftaran
+                    </button>
+                    <button class="suggestion-btn" data-question="Di mana alamat SMK Infokom Bogor?">
+                        <i class="fas fa-map-marker-alt"></i> Alamat
+                    </button>
+                `;
+                responseElement.appendChild(suggestionsDiv);
+                
+                // Tambahkan event listener untuk tombol saran baru
+                document.querySelectorAll('.suggestion-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        userInput.value = this.getAttribute('data-question');
+                        processUserMessage();
+                    });
+                });
+            }
+        }
+        
+        // Event listener untuk tombol kirim
+        sendButton.addEventListener('click', processUserMessage);
+        
+        // Event listener untuk tombol enter
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                processUserMessage();
+            }
+        });
+        
+        // Event listener untuk tombol saran (yang sudah ada)
+        document.querySelectorAll('.suggestion-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                userInput.value = this.getAttribute('data-question');
+                processUserMessage();
+            });
+        });
+        
+        // Fokus ke input saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            userInput.focus();
+            
+            // Scroll ke bawah
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Tambahkan CSS untuk efek shake
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+        
+        // Fitur auto-resize untuk input (opsional)
+        userInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    </script>
+</body>
+</html>
