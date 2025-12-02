@@ -21,11 +21,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 10px;
         }
         
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             width: 100%;
             background-color: white;
             border-radius: 20px;
@@ -33,29 +33,42 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 90vh;
+            height: 95vh;
+            max-height: 900px;
         }
         
+        /* Header Styles */
         .header {
             background: linear-gradient(90deg, #1a237e 0%, #3949ab 100%);
             color: white;
-            padding: 25px 30px;
+            padding: 20px;
             text-align: center;
             position: relative;
+            flex-shrink: 0;
+        }
+        
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
         
         .header h1 {
-            font-size: 26px;
-            margin-bottom: 8px;
+            font-size: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
+            flex-wrap: wrap;
+            text-align: center;
         }
         
         .header p {
-            font-size: 15px;
+            font-size: 14px;
             opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.4;
         }
         
         .api-status {
@@ -64,11 +77,12 @@
             right: 15px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 12px;
+            gap: 6px;
+            font-size: 11px;
             background: rgba(255, 255, 255, 0.2);
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 20px;
+            backdrop-filter: blur(5px);
         }
         
         .status-dot {
@@ -89,19 +103,22 @@
             100% { opacity: 1; }
         }
         
+        /* Chat Container */
         .chat-container {
             flex: 1;
-            padding: 25px;
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            background-color: #f9f9f9;
+            gap: 15px;
+            background-color: #f5f7fb;
+            -webkit-overflow-scrolling: touch;
         }
         
+        /* Message Styles */
         .message {
             display: flex;
-            max-width: 80%;
+            max-width: 85%;
             margin-bottom: 5px;
             animation: fadeIn 0.3s ease-out;
         }
@@ -121,31 +138,34 @@
         }
         
         .avatar {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             flex-shrink: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .user-avatar {
             background-color: #3949ab;
-            margin-left: 12px;
+            margin-left: 10px;
         }
         
         .bot-avatar {
             background-color: #ff5722;
-            margin-right: 12px;
+            margin-right: 10px;
         }
         
         .message-content {
-            padding: 15px;
+            padding: 12px 16px;
             border-radius: 18px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
             line-height: 1.5;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
         .user-message .message-content {
@@ -161,7 +181,7 @@
         }
         
         .message-content p {
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         
         .message-content ul, .message-content ol {
@@ -169,60 +189,78 @@
             margin-bottom: 10px;
         }
         
+        .message-content li {
+            margin-bottom: 5px;
+        }
+        
+        /* Info Boxes */
+        .school-info, .principal-info, .warning-box {
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
         .school-info {
             background-color: #e8f4fd;
             border-left: 4px solid #2196f3;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        
-        .school-info h4 {
-            color: #1565c0;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         
         .principal-info {
             background-color: #fff8e1;
             border-left: 4px solid #ff9800;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 14px;
         }
         
-        .principal-info h4 {
-            color: #e65100;
+        .warning-box {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+        }
+        
+        .school-info h4, .principal-info h4 {
             margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
+        .school-info h4 {
+            color: #1565c0;
+        }
+        
+        .principal-info h4 {
+            color: #e65100;
+        }
+        
+        /* Input Container */
         .input-container {
-            padding: 20px 25px;
+            padding: 15px 20px;
             background-color: white;
-            border-top: 1px solid #eee;
+            border-top: 1px solid #e0e0e0;
             display: flex;
-            gap: 15px;
+            gap: 12px;
+            align-items: center;
+            flex-shrink: 0;
         }
         
         #user-input {
             flex: 1;
-            padding: 15px 20px;
+            padding: 12px 18px;
             border: 2px solid #e0e0e0;
             border-radius: 50px;
-            font-size: 16px;
-            transition: border 0.3s;
+            font-size: 15px;
+            transition: border 0.3s, box-shadow 0.3s;
             outline: none;
+            background-color: #f9f9f9;
+            min-height: 50px;
+            resize: none;
+            overflow: hidden;
         }
         
         #user-input:focus {
             border-color: #3949ab;
+            box-shadow: 0 0 0 2px rgba(57, 73, 171, 0.1);
+            background-color: white;
         }
         
         #send-button {
@@ -230,14 +268,15 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 18px;
             transition: background-color 0.3s, transform 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
         
         #send-button:hover {
@@ -249,6 +288,7 @@
             transform: scale(0.98);
         }
         
+        /* Typing Indicator */
         .typing-indicator {
             display: flex;
             align-items: center;
@@ -261,8 +301,8 @@
         }
         
         .typing-indicator span {
-            height: 10px;
-            width: 10px;
+            height: 8px;
+            width: 8px;
             background-color: #999;
             border-radius: 50%;
             display: inline-block;
@@ -288,24 +328,16 @@
                 transform: translateY(0);
             }
             30% {
-                transform: translateY(-8px);
+                transform: translateY(-6px);
             }
         }
         
-        .warning-box {
-            background-color: #fff3e0;
-            border-left: 4px solid #ff9800;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        
+        /* Suggestions */
         .suggestions {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 8px;
+            margin-top: 12px;
         }
         
         .suggestion-btn {
@@ -313,83 +345,272 @@
             border: none;
             border-radius: 20px;
             padding: 8px 16px;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            white-space: nowrap;
         }
         
         .suggestion-btn:hover {
             background-color: #e0e0e0;
+            transform: translateY(-1px);
         }
         
+        /* Footer */
         .footer {
             text-align: center;
-            padding: 15px;
-            font-size: 13px;
-            color: #777;
+            padding: 12px;
+            font-size: 12px;
+            color: #666;
             background-color: #f9f9f9;
             border-top: 1px solid #eee;
+            flex-shrink: 0;
         }
         
-        /* Responsive design */
-        @media (max-width: 768px) {
+        /* Desktop Optimizations */
+        @media (min-width: 768px) {
             .container {
-                height: 95vh;
+                max-width: 1000px;
+                height: 90vh;
+                max-height: 800px;
             }
             
             .header {
-                padding: 20px;
+                padding: 25px 30px;
+            }
+            
+            .header h1 {
+                font-size: 26px;
+            }
+            
+            .header p {
+                font-size: 15px;
+            }
+            
+            .chat-container {
+                padding: 25px;
+                gap: 20px;
+            }
+            
+            .avatar {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
+            .user-avatar {
+                margin-left: 15px;
+            }
+            
+            .bot-avatar {
+                margin-right: 15px;
+            }
+            
+            .message-content {
+                padding: 15px 20px;
+                max-width: 600px;
+            }
+            
+            .input-container {
+                padding: 20px 25px;
+                gap: 15px;
+            }
+            
+            #user-input {
+                padding: 15px 20px;
+                font-size: 16px;
+            }
+            
+            #send-button {
+                width: 55px;
+                height: 55px;
+                font-size: 20px;
+            }
+            
+            .footer {
+                font-size: 13px;
+                padding: 15px;
+            }
+            
+            .suggestion-btn {
+                font-size: 14px;
+                padding: 8px 18px;
+            }
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+                gap: 8px;
+            }
+            
+            .header p {
+                font-size: 12px;
+            }
+            
+            .api-status {
+                position: static;
+                margin-top: 8px;
+                align-self: center;
+                font-size: 10px;
+            }
+            
+            .header-content {
+                flex-direction: column;
             }
             
             .chat-container {
                 padding: 15px;
+                gap: 12px;
             }
             
             .message {
                 max-width: 90%;
             }
             
-            .input-container {
-                padding: 15px;
+            .avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
             }
-        }
-        
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 22px;
+            
+            .user-avatar {
+                margin-left: 8px;
+            }
+            
+            .bot-avatar {
+                margin-right: 8px;
             }
             
             .message-content {
-                padding: 12px;
-                font-size: 15px;
+                padding: 10px 14px;
+                font-size: 14px;
             }
             
-            .avatar {
-                width: 35px;
-                height: 35px;
-                font-size: 16px;
+            .input-container {
+                padding: 12px 15px;
+                gap: 10px;
             }
             
             #user-input {
-                padding: 12px 15px;
+                padding: 10px 15px;
+                font-size: 14px;
+                min-height: 45px;
             }
             
             #send-button {
-                width: 50px;
-                height: 50px;
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
             }
+            
+            .suggestions {
+                gap: 6px;
+            }
+            
+            .suggestion-btn {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            
+            .footer {
+                padding: 10px;
+                font-size: 11px;
+            }
+        }
+        
+        /* Tablet Optimizations */
+        @media (min-width: 481px) and (max-width: 767px) {
+            .container {
+                height: 95vh;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .header p {
+                font-size: 13px;
+            }
+            
+            .chat-container {
+                padding: 18px;
+            }
+            
+            .message {
+                max-width: 88%;
+            }
+        }
+        
+        /* Scrollbar Styling */
+        .chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        /* Touch-friendly improvements */
+        .suggestion-btn, #send-button {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .suggestion-btn:active, #send-button:active {
+            transform: scale(0.95);
+        }
+        
+        /* Input auto-resize */
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+        
+        /* Message image responsive */
+        .message-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 5px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="api-status">
-                <span class="status-dot" id="api-status-dot"></span>
-                <span id="api-status-text">Menggunakan AI</span>
+            <div class="header-content">
+                <h1><i class="fas fa-robot"></i> Chatbot AI SMK Infokom</h1>
+                <p>Chatbot informasi tentang SMK Infokom Bogor. Tanyakan tentang jurusan, kegiatan, fasilitas, dan lainnya.</p>
+                <div class="api-status">
+                    <span class="status-dot" id="api-status-dot"></span>
+                    <span id="api-status-text">Menggunakan AI</span>
+                </div>
             </div>
-            <h1><i class="fas fa-robot"></i> Chatbot AI SMK Infokom</h1>
-            <p>Chatbot informasi tentang SMK Infokom Bogor. Tanyakan tentang jurusan, kegiatan, fasilitas, dan lainnya.</p>
         </div>
         
         <div class="chat-container" id="chat-container">
@@ -400,8 +621,6 @@
                 </div>
                 <div class="message-content">
                     <p>Halo! Saya adalah chatbot AI SMK Infokom Bogor. Saya siap membantu Anda dengan informasi tentang sekolah kami.</p>
-                    
-
                     <p>Apa yang ingin Anda ketahui?</p>
                     
                     <div class="suggestions">
@@ -812,6 +1031,17 @@
             
             // Scroll ke bawah
             chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Focus ke input
+            setTimeout(() => {
+                userInput.focus();
+            }, 500);
+        });
+        
+        // Auto-resize input
+        userInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
         });
     </script>
 </body>
